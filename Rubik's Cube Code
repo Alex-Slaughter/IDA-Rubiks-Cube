@@ -1,1 +1,282 @@
+CP = [1, 2, 3, 4, 5, 6, 7, 8]  #POSITIONS START TOP LEFT GOING CLOCKWISE, THEN SAME AT BOTTOM. ASCENDING ORDER IS SOLVED POSITION.
+EP = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]  #POSITIONS START TOP FRONT GOING CLOCKWISE, THEN FRONT LEFT FOR MIDDLE, THEN SAME AT BOTTOM AS TOP. ASCENDING ORDER IS SOLVED POSITION.
 
+CO = [0, 0, 0, 0, 0, 0, 0, 0]  #THE ORIENTATION VALUE OF THE CUBELET IN THESE CORRESPONDING POSITION INDEX. 0=SOLVED
+EO = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  #THE ORIENTATION VALUE OF THE CUBELET IN THESE CORRESPONDING POSITION INDEX. 0=SOLVED
+
+# Orientation is done after translation from the new position 
+# For corners measure from the up/down face. A cublet moving from top to bottom or side to side is reflected in the appropriate axis
+
+
+
+
+
+function UCP(CP) # Calculates the new corner positions after a U movement
+    temp_CP=[] # Create a temporary vector
+    for i in 1:8
+        push!(temp_CP,CP[i]) # Populate the temporary vector
+    end
+    CP[1]=temp_CP[4]
+    CP[2]=temp_CP[1]
+    CP[3]=temp_CP[2]
+    CP[4]=temp_CP[3]
+    temp_CP=[]
+    return CP
+end
+
+function UEP(EP) # Calculates the new edge positions after a U movement
+    temp_EP=[] # Create a temporary vector
+    for i in 1:12
+        push!(temp_EP,EP[i]) # Populate the temporary vector
+    end
+    EP[1]=temp_EP[4]
+    EP[2]=temp_EP[1]
+    EP[3]=temp_EP[2]
+    EP[4]=temp_EP[3]
+    temp_EP=[]
+    return EP
+end
+
+function UCO(CO) # Calculates the new corner orientations after a U movement
+    CO=CO+[0,0,0,0,0,0,0,0] #Adding adjustment vector to CO
+    for i in 1:8
+        CO[i] = mod(CO[i],3)
+    end
+    return CO 
+end
+
+function UEO(EO) # Calculates the new edge orientations after a U movement
+    EO=EO+[0,0,0,0,0,0,0,0,0,0,0,0] #Adding adjustment vector to EO
+    for i in 1:12
+        EO[i] = mod(EO[i],3)
+    end
+    return EO 
+end
+
+function U(CPI,EPI,COI,EOI) # Function to complete a full U movement on the cube. CPI=corner position input
+    global CP=UCP(CP)
+    global EP=UEP(EP)
+    global CO=UCO(UCP(CO))
+    global EO=UEO(UEP(EO))
+    return CP, EP, CO, EO
+end
+
+function RCP(CP) # Similar to above but for R movement
+    temp_CP=[]
+    for i in 1:8
+        push!(temp_CP,CP[i])
+    end
+    CP[3]=temp_CP[4]
+    CP[4]=temp_CP[8]
+    CP[7]=temp_CP[3]
+    CP[8]=temp_CP[7]
+    temp_CP=[]
+    return CP
+end
+
+function REP(EP) # Similar to above but for R movement
+    temp_EP=[]
+    for i in 1:12
+        push!(temp_EP,EP[i])
+    end
+    EP[4]=temp_EP[8]
+    EP[7]=temp_EP[4]
+    EP[8]=temp_EP[12]
+    EP[12]=temp_EP[7]
+    temp_EP=[]
+    return EP
+end
+
+function RCO(CO) # Similar to above but for R movement
+    CO=CO+[0,0,1,2,0,0,1,2] 
+    for i in 1:8
+        CO[i] = mod(CO[i],3)
+    end
+    return CO 
+end
+
+function REO(EO) # Similar to above but for R movement
+    EO=EO+[0,0,0,2,0,0,1,2,0,0,0,1] 
+    for i in 1:12
+        EO[i] = mod(EO[i],3)
+    end
+    return EO 
+end
+
+function R(CPI,EPI,COI,EOI) # Similar to above but for R movement
+    global CP=RCP(CP)
+    global EP=REP(EP)
+    global CO=RCO(RCP(CO))
+    global EO=REO(REP(EO))
+    return CP, EP, CO, EO
+end
+
+
+
+
+
+function XCP(CP) # Similar to above but moves whole cube like U
+    temp_CP=[]
+    for i in 1:8
+        push!(temp_CP,CP[i])
+    end
+    CP[1]=temp_CP[4]
+    CP[2]=temp_CP[1]
+    CP[3]=temp_CP[2]
+    CP[4]=temp_CP[3]
+    CP[5]=temp_CP[8]
+    CP[6]=temp_CP[5]
+    CP[7]=temp_CP[6]
+    CP[8]=temp_CP[7]
+    temp_CP=[]
+    return CP
+end
+
+function XEP(EP) # Similar to above but moves whole cube like U
+    temp_EP=[]
+    for i in 1:12
+        push!(temp_EP,EP[i])
+    end
+    EP[1]=temp_EP[4]
+    EP[2]=temp_EP[1]
+    EP[3]=temp_EP[2]
+    EP[4]=temp_EP[3]
+    EP[5]=temp_EP[8]
+    EP[6]=temp_EP[5]
+    EP[7]=temp_EP[6]
+    EP[8]=temp_EP[7]
+    EP[9]=temp_EP[12]
+    EP[10]=temp_EP[9]
+    EP[11]=temp_EP[10]
+    EP[12]=temp_EP[11]
+    temp_EP=[]
+    return EP
+end
+
+function XCO(CO) # Similar to above but moves whole cube like U
+    CO=CO+[0,0,0,0,0,0,0,0] 
+    for i in 1:8
+        CO[i] = mod(CO[i],3)
+    end
+    return CO 
+end
+
+function XEO(EO) # Similar to above but moves whole cube like U
+    EO=EO+[0,0,0,0,0,0,0,0,0,0,0,0] 
+    for i in 1:12
+        EO[i] = mod(EO[i],3)
+    end
+    return EO 
+end
+
+function X(CPI,EPI,COI,EOI) # Similar to above but moves whole cube like U
+    global CP=XCP(CP)
+    global EP=XEP(EP)
+    global CO=XCO(UCP(CO))
+    global EO=XEO(UEP(EO))
+    return CP, EP, CO, EO
+end
+
+function YCP(CP) # Similar to above but moves whole cube like R
+    temp_CP=[]
+    for i in 1:8
+        push!(temp_CP,CP[i])
+    end
+    CP[1]=temp_CP[5]
+    CP[2]=temp_CP[1]
+    CP[3]=temp_CP[4]
+    CP[4]=temp_CP[8]
+    CP[5]=temp_CP[6]
+    CP[6]=temp_CP[2]
+    CP[7]=temp_CP[3]
+    CP[8]=temp_CP[7]
+    temp_CP=[]
+    return CP
+end
+
+function YEP(EP) # Similar to above but moves whole cube like R
+    temp_EP=[]
+    for i in 1:12
+        push!(temp_EP,EP[i])
+    end
+    EP[1]=temp_EP[9]
+    EP[2]=temp_EP[5]
+    EP[3]=temp_EP[1]
+    EP[4]=temp_EP[8]
+    EP[5]=temp_EP[10]
+    EP[6]=temp_EP[2]
+    EP[7]=temp_EP[4]
+    EP[8]=temp_EP[12]
+    EP[9]=temp_EP[11]
+    EP[10]=temp_EP[6]
+    EP[11]=temp_EP[3]
+    EP[12]=temp_EP[7]
+    temp_EP=[]
+    return EP
+end
+
+function YCO(CO) # Similar to above but moves whole cube like R
+    CO=CO+[1,2,1,2,1,2,1,2] 
+    for i in 1:8
+        CO[i] = mod(CO[i],3)
+    end
+    return CO 
+end
+
+function YEO(EO) # Similar to above but moves whole cube like R
+    EO=EO+[2,2,2,2,2,1,1,2,1,1,1,1] 
+    for i in 1:12
+        EO[i] = mod(EO[i],3)
+    end
+    return EO 
+end
+
+function Y(CPI,EPI,COI,EOI) # Similar to above but moves whole cube like R
+    global CP=YCP(CP)
+    global EP=YEP(EP)
+    global CO=YCO(UCP(CO))
+    global EO=YEO(UEP(EO))
+    return CP, EP, CO, EO
+end
+
+
+
+
+
+function L(CPI,EPI,COI,EOI) # Compilation of above movements to represent L movement
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    R(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    return CP, EP, CO, EO
+end
+
+function D(CPI,EPI,COI,EOI) # Compilation of above movements to represent D movement
+    Y(CPI,EPI,COI,EOI)
+    Y(CPI,EPI,COI,EOI)
+    U(CPI,EPI,COI,EOI)
+    U(CPI,EPI,COI,EOI)
+    U(CPI,EPI,COI,EOI)
+    Y(CPI,EPI,COI,EOI)
+    Y(CPI,EPI,COI,EOI)
+    return CP, EP, CO, EO
+end
+
+function F(CPI,EPI,COI,EOI) # Compilation of above movements to represent F movement
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    R(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    return CP, EP, CO, EO
+end
+
+function B(CPI,EPI,COI,EOI) # Compilation of above movements to represent B movement
+    X(CPI,EPI,COI,EOI)
+    R(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    X(CPI,EPI,COI,EOI)
+    return CP, EP, CO, EO
+end
